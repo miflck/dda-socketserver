@@ -1,50 +1,33 @@
-var express = require("express");
+"use strict";
 
-var app = express();
-var server = app.listen(5501);
+const express = require("express");
+const socketIO = require("socket.io");
+const PORT = process.env.PORT || 5500;
+const INDEX = "public/index.html";
 
-app.use(express.static("public"));
-
-console.log("sone scheiss");
-
-var socket = require("socket.io");
-
-var io = socket(server);
-
-//io.sockets.on('connection', newConnection);
-
-io.on("connection", (socket) => {
-  console.log("a user connected" + socket.id);
-
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
-  socket.on("mouse", (data) => {
-    console.log("message: " + socket.id);
-    socket.broadcast.emit("mouse", data);
-  });
-  socket.on("hello", (data) => {
-    console.log("hello message: " + data);
-    socket.broadcast.emit("hello", data);
+const server = express()
+  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+  .listen(PORT, () => {
+    console.log(`Listening on ${PORT}`);
   });
 
-  /*  function mouseMsg(data){
-        console.log(data);
-    }*/
+const io = require("socket.io")(server, {
+  cors: {
+    origins: ["https://ddasocket.michaelflueckiger.ch", "http://localhost:3000"],
+    methods: ["GET", "POST"],
+  },
 });
 
-/*
-function newConnection(socket){
-    console.log('new connection' + socket.id);
+io.on("connection", (socket) => {
+  io.emit("client connected", socket.id);
+  socket.emit("client id", socket.id);
 
-    socket.on('mouse', mouseMsg);
+  socket.on("mouse", (data) => {
+    console.log("message: " + socket.id);
+    socket.broadcast.emit("mouse", "hey");
+  });
 
-    function mouseMsg(data){
-        console.log(data);
-    }
-
-    socket.on('error', function (err) {
-        console.log(err);
-    });
-    
-}*/
+  socket.on("disconnect", () => {
+    io.emit("client disconnected");
+  });
+});
