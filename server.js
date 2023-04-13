@@ -23,8 +23,8 @@ io.on("connection", (socket) => {
   socket.emit("client id", socket.id);
 
   socket.on("mouse", (data) => {
-    console.log("message: " + socket.id);
-    socket.broadcast.emit("mouse", "hey");
+    console.log("message: " + data);
+    socket.emit("mouse", data);
   });
 
   socket.on("disconnect", () => {
