@@ -13,7 +13,11 @@ const server = express()
 
 const io = require("socket.io")(server, {
   cors: {
-    origins: ["https://ddasocket.michaelflueckiger.ch", "http://localhost:5501"],
+    origins: [
+      "https://ddasocket.michaelflueckiger.ch",
+      "http://localhost:5501",
+      "http://localhost:3000",
+    ],
     methods: ["GET", "POST"],
   },
 });
