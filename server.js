@@ -27,6 +27,11 @@ io.on("connection", (socket) => {
     socket.emit("mouse", data);
   });
 
+  socket.on("message", (data) => {
+    console.log("message: " + data);
+    socket.emit("message", data);
+  });
+
   socket.on("disconnect", () => {
     io.emit("client disconnected");
   });
