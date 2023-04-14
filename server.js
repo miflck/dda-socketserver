@@ -16,6 +16,7 @@ const io = require("socket.io")(server, {
     origins: [
       "https://ddasocket.michaelflueckiger.ch",
       "http://localhost:5501",
+      "http://localhost:5500",
       "http://localhost:3000",
     ],
     methods: ["GET", "POST"],
